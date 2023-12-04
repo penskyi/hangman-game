@@ -4,6 +4,7 @@ class Program
     static void Main(string[] args)
     {
         const int MAX_WRONG_GUESSES = 6;
+        const char UI_PLACEHOLDER = '_';
 
         List<string> secretWords = new List<string>()
         {
@@ -26,7 +27,7 @@ class Program
         char[] guessedWordArray = new char[secretWord.Length];
         for (int i = 0; i < secretWord.Length; i++)
         {
-            guessedWordArray[i] = '_';
+            guessedWordArray[i] = UI_PLACEHOLDER;
         }
 
         while (remainingTries > 0)
@@ -69,7 +70,7 @@ class Program
                 Console.WriteLine("Good guess! what's your next letter?");
             }
 
-            if (string.Join("", guessedWordArray) == secretWord)
+            if (!SecretWordContainsPlaceholderCharacter(guessedWordArray))
             {
                 ClearConsoleAndPrintGuessedWord(guessedWordArray);
                 Console.WriteLine("\nYou WIN! You guessed the word: " + secretWord);
@@ -86,7 +87,23 @@ class Program
         static void ClearConsoleAndPrintGuessedWord(char[] guessedWordArray)
         {
             Console.Clear();
-            Console.WriteLine(string.Join(" ", guessedWordArray));
+            foreach (char c in guessedWordArray)
+            {
+                Console.Write(c + " ");
+            }
+            Console.WriteLine();
+        }
+
+        static bool SecretWordContainsPlaceholderCharacter(char[] guessedWordArray)
+        {
+            foreach (char c in guessedWordArray)
+            {
+                if (c == '_')
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
