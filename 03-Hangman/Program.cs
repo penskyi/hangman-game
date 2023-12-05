@@ -19,9 +19,6 @@ class Program
         Random random = new Random();
         string secretWord = secretWords[random.Next(secretWords.Count)]; // Randomly select a word from the list of randonm words
 
-        int remainingTries = MAX_WRONG_GUESSES;
-        HashSet<char> guessedLetters = new HashSet<char>();
-
         Console.WriteLine("Welcome to the Hangman Game!");
 
         char[] guessedWordArray = new char[secretWord.Length];
@@ -30,6 +27,7 @@ class Program
             guessedWordArray[i] = UI_PLACEHOLDER;
         }
 
+        int remainingTries = MAX_WRONG_GUESSES;
         while (remainingTries > 0)
         {
             ClearConsoleAndPrintGuessedWord(guessedWordArray);
@@ -42,6 +40,7 @@ class Program
                 continue;
             }
 
+            HashSet<char> guessedLetters = new HashSet<char>();
             if (guessedLetters.Contains(guess))
             {
                 Console.WriteLine("You already guessed this letter '{0}'. Try a different letter.", guess);
