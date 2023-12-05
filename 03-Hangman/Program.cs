@@ -1,11 +1,11 @@
 ﻿namespace _03_Hangman;
 class Program
 {
+    const int MAX_WRONG_GUESSES = 6;
+    const char UI_PLACEHOLDER = '_';
+
     static void Main(string[] args)
     {
-        const int MAX_WRONG_GUESSES = 6;
-        const char UI_PLACEHOLDER = '_';
-
         List<string> secretWords = new List<string>()
         {
             "hangman",
@@ -82,27 +82,24 @@ class Program
             ClearConsoleAndPrintGuessedWord(guessedWordArray);
             Console.WriteLine("\nGame Over! The secret word was: " + secretWord);
         }
+    }
 
-        static void ClearConsoleAndPrintGuessedWord(char[] guessedWordArray)
+    static void ClearConsoleAndPrintGuessedWord(char[] guessedWordArray)
+    {
+        Console.Clear();
+        foreach (char c in guessedWordArray)
         {
-            Console.Clear();
-            foreach (char c in guessedWordArray)
-            {
-                Console.Write(c + " ");
-            }
-            Console.WriteLine();
+            Console.Write(c + " ");
         }
+        Console.WriteLine();
+    }
 
-        static bool SecretWordContainsPlaceholderCharacter(char[] guessedWordArray)
+    static bool SecretWordContainsPlaceholderCharacter(char[] guessedWordArray)
+    {
+        if (guessedWordArray.Contains(UI_PLACEHOLDER))
         {
-            foreach (char c in guessedWordArray)
-            {
-                if (c == '_')
-                {
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
+        return false;
     }
 }
