@@ -6,81 +6,101 @@ class Program
 
     static void Main(string[] args)
     {
-        List<string> secretWords = new List<string>()
+
+        bool gameActive;
+
+        do
         {
-            "hangman",
-            "mentoring",
-            "csharp",
-            "microsoft",
-            "apple"
-        };
+            RunHangmanGame();
 
-        int listLeigh = secretWords.Count();
-        Random random = new Random();
-        string secretWord = secretWords[random.Next(secretWords.Count)]; // Randomly select a word from the list of randonm words
+            Console.Write("Do you want to try again? (yes/no): ");
+            string userChoice = Console.ReadLine().ToLower();
+            gameActive = (userChoice == "yes" || userChoice == "y");
 
-        Console.WriteLine("Welcome to the Hangman Game!");
+        } while (gameActive);
 
-        char[] guessedWordArray = new char[secretWord.Length];
-        for (int i = 0; i < secretWord.Length; i++)
+        Console.WriteLine("Hangman game is closing...");
+
+        static void RunHangmanGame()
         {
-            guessedWordArray[i] = UI_PLACEHOLDER;
-        }
 
-        int remainingTries = MAX_WRONG_GUESSES;
-        while (remainingTries > 0)
-        {
-            ClearConsoleAndPrintGuessedWord(guessedWordArray);
-            char guess = char.ToLower(Console.ReadKey().KeyChar);
-            Console.WriteLine();
-
-            if (!char.IsLetter(guess))
+            List<string> secretWords = new List<string>()
             {
-                Console.WriteLine("Please try again and enter a valid letter.");
-                continue;
-            }
+                "hangman",
+                "mentoring",
+                "csharp",
+                "microsoft",
+                "apple"
+             };
 
-            HashSet<char> guessedLetters = new HashSet<char>();
-            if (guessedLetters.Contains(guess))
-            {
-                Console.WriteLine("You already guessed this letter '{0}'. Try a different letter.", guess);
-                continue;
-            }
+            int listLeigh = secretWords.Count();
+            Random random = new Random();
+            string secretWord = secretWords[random.Next(secretWords.Count)]; // Randomly select a word from the list of randonm words
 
-            guessedLetters.Add(guess);
+            Console.WriteLine("Welcome to the Hangman Game!");
 
-            bool found = false;
+            char[] guessedWordArray = new char[secretWord.Length];
             for (int i = 0; i < secretWord.Length; i++)
             {
-                if (secretWord[i] == guess)
+                guessedWordArray[i] = UI_PLACEHOLDER;
+            }
+
+            int remainingTries = MAX_WRONG_GUESSES;
+            while (remainingTries > 0)
+            {
+                ClearConsoleAndPrintGuessedWord(guessedWordArray);
+                char guess = char.ToLower(Console.ReadKey().KeyChar);
+                Console.WriteLine();
+
+                if (!char.IsLetter(guess))
                 {
-                    guessedWordArray[i] = guess;
-                    found = true;
+                    Console.WriteLine("Please try again and enter a valid letter.");
+                    continue;
+                }
+
+                HashSet<char> guessedLetters = new HashSet<char>();
+                if (guessedLetters.Contains(guess))
+                {
+                    Console.WriteLine("You already guessed this letter '{0}'. Try a different letter.", guess);
+                    continue;
+                }
+
+                guessedLetters.Add(guess);
+
+                bool found = false;
+                for (int i = 0; i < secretWord.Length; i++)
+                {
+                    if (secretWord[i] == guess)
+                    {
+                        guessedWordArray[i] = guess;
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                {
+                    remainingTries--;
+                    Console.WriteLine("Incorrect! Try to guess again.");
+                }
+                else
+                {
+                    Console.WriteLine("Good guess! what's your next letter?");
+                }
+
+                if (!SecretWordContainsPlaceholderCharacter(guessedWordArray))
+                {
+                    ClearConsoleAndPrintGuessedWord(guessedWordArray);
+                    Console.WriteLine("\nYou WIN! You guessed the word: " + secretWord);
+                    break;
                 }
             }
 
-            if (!found)
-            {
-                remainingTries--;
-                Console.WriteLine("Incorrect! Try to guess again.");
-            }
-            else
-            {
-                Console.WriteLine("Good guess! what's your next letter?");
-            }
-
-            if (!SecretWordContainsPlaceholderCharacter(guessedWordArray))
+            if (remainingTries == 0)
             {
                 ClearConsoleAndPrintGuessedWord(guessedWordArray);
-                Console.WriteLine("\nYou WIN! You guessed the word: " + secretWord);
-                break;
+                Console.WriteLine("\nGame Over! The secret word was: " + secretWord);
             }
-        }
 
-        if (remainingTries == 0)
-        {
-            ClearConsoleAndPrintGuessedWord(guessedWordArray);
-            Console.WriteLine("\nGame Over! The secret word was: " + secretWord);
         }
     }
 
@@ -102,4 +122,5 @@ class Program
         }
         return false;
     }
+
 }
